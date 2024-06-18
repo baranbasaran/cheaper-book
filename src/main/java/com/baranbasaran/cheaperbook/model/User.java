@@ -1,11 +1,9 @@
 package com.baranbasaran.cheaperbook.model;
 
 import com.baranbasaran.cheaperbook.common.model.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Filter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -13,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -21,7 +18,7 @@ import java.util.Set;
 @Setter
 @Entity(name = "users")
 @Table(name = "users")
-@Filter(name = "deletedFilter", condition = "deleted = false")
+@Where(clause = "deleted = false")
 public class User extends BaseEntity {
 
     @Column(nullable = false)
@@ -43,7 +40,6 @@ public class User extends BaseEntity {
     private String profilePicture;
 
     @OneToMany(mappedBy = "owner")
-    @JsonManagedReference
     private List<Book> books;
 
     @Column(nullable = false)
@@ -62,12 +58,22 @@ public class User extends BaseEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id")
     )
+    @Builder.Default
     private Set<User> followers = new HashSet<>();
 
-    @ManyToMany(mappedBy = "followers")
+    @ManyToMany
+    @JoinTable(
+            name = "user_followers",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @Builder.Default
     private Set<User> following = new HashSet<>();
 
     public void follow(User userToFollow) {
+        if (following.contains(userToFollow)) {
+            return;
+        }
         following.add(userToFollow);
         userToFollow.getFollowers().add(this);
     }

@@ -16,5 +16,5 @@ public abstract class BaseEntity {
     private Long id;
 
     @Column(name = "deleted", nullable = false)
-    private boolean deleted;
+    private boolean deleted = Boolean.FALSE;
 }

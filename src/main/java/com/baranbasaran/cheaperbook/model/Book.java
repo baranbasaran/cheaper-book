@@ -1,13 +1,12 @@
 package com.baranbasaran.cheaperbook.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.baranbasaran.cheaperbook.common.model.BaseEntity;
 import com.baranbasaran.cheaperbook.dto.BookDto;
 import com.baranbasaran.cheaperbook.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 @Setter
 @Entity(name = "books")
 @Table(name = "books")
-@Filter(name = "deletedFilter", condition = "deleted = false")
+@Where(clause = "deleted = false")
 public class Book extends BaseEntity {
 
     @Column(nullable = false)
@@ -34,7 +33,6 @@ public class Book extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_id")
-    @JsonBackReference
     private User owner;
 
     @Column(nullable = false)

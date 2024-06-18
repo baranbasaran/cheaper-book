@@ -47,11 +47,13 @@ public class UserController {
     }
 
     @PostMapping("{userId}/follow/{userToFollowId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void followUser(@PathVariable Long userId, @PathVariable Long userToFollowId) {
         userService.followUser(userId, userToFollowId);
     }
 
     @PostMapping("{userId}/unfollow/{userToUnfollowId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unfollowUser(@PathVariable Long userId, @PathVariable Long userToUnfollowId) {
         userService.unfollowUser(userId, userToUnfollowId);
     }

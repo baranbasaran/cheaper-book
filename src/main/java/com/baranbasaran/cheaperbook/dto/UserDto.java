@@ -1,6 +1,7 @@
 package com.baranbasaran.cheaperbook.dto;
 
 import com.baranbasaran.cheaperbook.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,11 +19,12 @@ public class UserDto {
     private String surname;
     private String email;
     private String username;
-    private String password;
     private String phoneNumber;
     private LocalDate birthDate;
     private AddressDto address;
 
+    @JsonIgnore
+    private String password;
 
     public static UserDto from(User user) {
         return UserDto.builder()

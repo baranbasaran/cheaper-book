@@ -55,7 +55,7 @@ public class BookService {
     }
 
     public BookDto findBookByIdAndUserId(Long bookId, Long userId) {
-        Book book = bookRepository.findByOwnerIdAndId(bookId, userId).orElseThrow(() -> new BookNotFoundException(bookId));
+        Book book = bookRepository.findByIdAndOwnerId(bookId, userId).orElseThrow(() -> new BookNotFoundException(bookId));
         return BookDto.from(book);
     }
 
@@ -63,7 +63,7 @@ public class BookService {
         return BookDto.from(mergeBookRequestWithExistingBook(userId, bookRequest));
     }
 
-    public BookDto updateBookForUser(Long userId, Long bookId, UpdateBookRequest bookRequest) {
+    public BookDto updateBookForUser(Long bookId, UpdateBookRequest bookRequest) {
         bookRequest.setId(bookId);
         return BookDto.from(updateBook(bookRequest));
     }
@@ -76,7 +76,6 @@ public class BookService {
         if (request.getIsbn() != null) {
             book = getBookByIsbnFromApi(request.getIsbn());
         }
-        
         if (request.getTitle() != null) {
             book.setTitle(request.getTitle());
         }
@@ -86,8 +85,6 @@ public class BookService {
         if (request.getDescription() != null) {
             book.setDescription(request.getDescription());
         }
-
-
         if (request.getPrice() != null) {
             book.setPrice(request.getPrice());
         }
@@ -95,7 +92,7 @@ public class BookService {
     }
 
     public void deleteBookForUser(Long userId, Long bookId) {
-        Book book = bookRepository.findByOwnerIdAndId(userId, bookId).orElseThrow(() -> new BookNotFoundException(bookId));
+        Book book = bookRepository.findByIdAndOwnerId(bookId, userId).orElseThrow(() -> new BookNotFoundException(bookId));
         book.setDeleted(true);
         bookRepository.save(book);
     }
